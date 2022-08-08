@@ -27,6 +27,10 @@ public class VPRequestServiceImpl implements VPRequestService {
 
     @Override
     public VPRequest updateVehicleProfileRequest(VPRequest vpRequest) {
+        Optional<VPRequest> existingVPRequest=vpRequestRepo.findById(vpRequest.getRequestID());
+        if(existingVPRequest.isPresent()){
+            return vpRequestRepo.save(vpRequest);
+        }
         return null;
     }
 

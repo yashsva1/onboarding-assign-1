@@ -24,4 +24,9 @@ public class VehicleProfileController {
 
     }
 
+    @PutMapping
+    public  ResponseEntity<VPRequest> updateVehicleProfileRequest(@RequestBody VPRequest vpRequest){
+        return ResponseEntity.ok(vpRequestService.updateVehicleProfileRequest(vpRequest));
+    }
+
 }
