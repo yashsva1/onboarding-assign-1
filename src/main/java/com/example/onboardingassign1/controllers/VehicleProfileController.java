@@ -29,4 +29,9 @@ public class VehicleProfileController {
         return ResponseEntity.ok(vpRequestService.updateVehicleProfileRequest(vpRequest));
     }
 
+    @DeleteMapping("/{requestID}")
+    public String deleteVehicleProfileRequest(@PathVariable String requestID){
+        return vpRequestService.deleteVehicleProfileRequest(requestID);
+    }
+
 }

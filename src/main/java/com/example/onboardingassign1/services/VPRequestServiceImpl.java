@@ -36,6 +36,12 @@ public class VPRequestServiceImpl implements VPRequestService {
 
     @Override
     public String deleteVehicleProfileRequest(String requestID) {
-        return null;
+        Optional<VPRequest> vpRequest=vpRequestRepo.findById(requestID);
+        if(vpRequest.isPresent()){
+            vpRequestRepo.delete(vpRequest.get());
+            return "Deletion Successful";
+        }
+
+        return "Deletion Failed";
     }
 }
