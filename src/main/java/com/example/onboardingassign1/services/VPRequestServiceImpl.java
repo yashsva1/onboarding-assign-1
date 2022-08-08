@@ -3,7 +3,10 @@ package com.example.onboardingassign1.services;
 import com.example.onboardingassign1.models.VPRequest;
 import com.example.onboardingassign1.repositories.VPRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class VPRequestServiceImpl implements VPRequestService {
@@ -18,7 +21,8 @@ public class VPRequestServiceImpl implements VPRequestService {
 
     @Override
     public VPRequest getVehicleProfileRequest(String requestID) {
-        return null;
+        VPRequest request=vpRequestRepo.findById(requestID).get();
+        return request;
     }
 
     @Override
