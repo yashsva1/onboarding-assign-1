@@ -27,4 +27,9 @@ public class CheckoutController {
         return checkoutService.updateCheckout(checkout);
     }
 
+    @DeleteMapping("/{checkoutID}")
+    String deleteCheckout(@PathVariable String checkoutID){
+        return checkoutService.deleteCheckout(checkoutID);
+    }
+
 }

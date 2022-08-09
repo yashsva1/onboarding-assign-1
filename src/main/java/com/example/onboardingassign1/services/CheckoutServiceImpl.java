@@ -39,6 +39,11 @@ public class CheckoutServiceImpl implements CheckoutService{
 
     @Override
     public String deleteCheckout(String requestID) {
-        return null;
+        Optional<Checkout> checkout=checkoutRepo.findById(requestID);
+        if (checkout.isPresent()){
+            checkoutRepo.delete(checkout.get());
+            return "Deletion Successful !!";
+        }
+        return "Deletion Failed !!";
     }
 }
