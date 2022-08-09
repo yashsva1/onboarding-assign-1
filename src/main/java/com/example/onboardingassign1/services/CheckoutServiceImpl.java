@@ -5,6 +5,8 @@ import com.example.onboardingassign1.repositories.CheckoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CheckoutServiceImpl implements CheckoutService{
 
@@ -19,6 +21,10 @@ public class CheckoutServiceImpl implements CheckoutService{
 
     @Override
     public Checkout getCheckout(String requestID) {
+        Optional<Checkout> checkout=checkoutRepo.findById(requestID);
+        if(checkout.isPresent()){
+            return checkout.get();
+        }
         return null;
     }
 

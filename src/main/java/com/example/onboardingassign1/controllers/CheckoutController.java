@@ -17,5 +17,9 @@ public class CheckoutController {
         return checkoutService.addCheckout(checkout);
     }
 
+    @GetMapping("/{checkoutID}")
+    Checkout readCheckout(@PathVariable String checkoutID){
+        return checkoutService.getCheckout(checkoutID);
+    }
 
 }
