@@ -4,7 +4,7 @@ import com.example.onboardingassign1.models.Checkout;
 import com.example.onboardingassign1.models.VPRequest;
 
 public interface CheckoutService {
-    String addCheckout(Checkout checkout);
+    Checkout addCheckout(Checkout checkout);
 
     Checkout getCheckout(String requestID);
 

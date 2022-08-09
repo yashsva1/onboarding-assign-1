@@ -13,7 +13,7 @@ public class CheckoutController {
     CheckoutService checkoutService;
 
     @PostMapping
-    String createCheckout(@RequestBody Checkout checkout){
+    Checkout createCheckout(@RequestBody Checkout checkout){
         return checkoutService.addCheckout(checkout);
     }
 

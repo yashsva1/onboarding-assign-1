@@ -1,7 +1,12 @@
 package com.example.onboardingassign1.services;
 
 import com.example.onboardingassign1.models.Checkout;
+import com.example.onboardingassign1.models.Insurer;
+import com.example.onboardingassign1.models.VPRequest;
+import com.example.onboardingassign1.models.VehicleInsurers;
 import com.example.onboardingassign1.repositories.CheckoutRepository;
+import com.example.onboardingassign1.repositories.VPRequestRepository;
+import com.example.onboardingassign1.repositories.VehicleInsurersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +18,21 @@ public class CheckoutServiceImpl implements CheckoutService{
     @Autowired
     private CheckoutRepository checkoutRepo;
 
+    @Autowired
+    private VPRequestRepository vpRequestRepository;
+
+    @Autowired
+    private VehicleInsurersRepository vehicleInsurersRepository;
+
     @Override
-    public String addCheckout(Checkout checkout) {
-        Checkout checkout1=checkoutRepo.save(checkout);
-        return checkout1.getCheckoutID();
+    public Checkout addCheckout(Checkout checkout) {
+        Optional<VPRequest> vpRequest=vpRequestRepository.findById(checkout.getRequestID());
+//        VehicleInsurers vehicleInsurers=vehicleInsurersRepository.findOneByMakeAndModel(vpRequest.get().getVehicleMake(),vpRequest.get().getVehicleModel());
+        if(vpRequest.isPresent()){
+            Checkout checkout1=checkoutRepo.save(checkout);
+            return checkout1;
+        }
+        return null;
     }
 
     @Override
