@@ -22,4 +22,9 @@ public class CheckoutController {
         return checkoutService.getCheckout(checkoutID);
     }
 
+    @PutMapping
+    Checkout updateCheckout(@RequestBody Checkout checkout){
+        return checkoutService.updateCheckout(checkout);
+    }
+
 }

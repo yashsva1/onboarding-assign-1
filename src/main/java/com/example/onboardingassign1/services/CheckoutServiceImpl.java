@@ -30,6 +30,10 @@ public class CheckoutServiceImpl implements CheckoutService{
 
     @Override
     public Checkout updateCheckout(Checkout checkout) {
+        Optional<Checkout> existingCheckout=checkoutRepo.findById(checkout.getCheckoutID());
+        if(existingCheckout.isPresent()){
+            return checkoutRepo.save(checkout);
+        }
         return null;
     }
 

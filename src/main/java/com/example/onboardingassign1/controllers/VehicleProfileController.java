@@ -21,7 +21,6 @@ public class VehicleProfileController {
     @GetMapping("/{requestID}")
     public ResponseEntity<VPRequest> getVehicleProfileRequest(@PathVariable String requestID){
         return  ResponseEntity.ok(vpRequestService.getVehicleProfileRequest(requestID));
-
     }
 
     @PutMapping
