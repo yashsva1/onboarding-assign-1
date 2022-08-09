@@ -1,5 +1,6 @@
 package com.example.onboardingassign1.services;
 
+import com.example.onboardingassign1.models.Checkout;
 import com.example.onboardingassign1.models.VPRequest;
 import com.example.onboardingassign1.models.VehicleInsurers;
 import com.example.onboardingassign1.repositories.VPRequestRepository;
@@ -25,5 +26,39 @@ public class VehicleInsurersServiceImpl implements VehicleInsurersService{
             return vehicleInsurers;
         }
         return null;
+    }
+
+    @Override
+    public String addVehicleInsurers(VehicleInsurers vehicleInsurers) {
+        VehicleInsurers vehicleInsurers1=vehicleInsurersRepo.save(vehicleInsurers);
+        return vehicleInsurers1.getID();
+    }
+
+    @Override
+    public VehicleInsurers getVehicleInsurers(String id) {
+        Optional<VehicleInsurers> vehicleInsurers=vehicleInsurersRepo.findById(id);
+        if(vehicleInsurers.isPresent()){
+            return vehicleInsurers.get();
+        }
+        return null;
+    }
+
+    @Override
+    public VehicleInsurers updateVehicleInsurers(VehicleInsurers vehicleInsurers) {
+        Optional<VehicleInsurers> existingVehicleInsurers=vehicleInsurersRepo.findById(vehicleInsurers.getID());
+        if(existingVehicleInsurers.isPresent()){
+            return vehicleInsurersRepo.save(vehicleInsurers);
+        }
+        return null;
+    }
+
+    @Override
+    public String deleteVehicleInsurers(String requestID) {
+        Optional<VehicleInsurers> vehicleInsurers=vehicleInsurersRepo.findById(requestID);
+        if (vehicleInsurers.isPresent()){
+            vehicleInsurersRepo.delete(vehicleInsurers.get());
+            return "Deletion Successful !!";
+        }
+        return "Deletion Failed !!";
     }
 }
