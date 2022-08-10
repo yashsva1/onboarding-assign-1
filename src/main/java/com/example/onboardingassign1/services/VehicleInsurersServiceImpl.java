@@ -22,8 +22,12 @@ public class VehicleInsurersServiceImpl implements VehicleInsurersService{
     public VehicleInsurers getAllAvailableInsurers(String requestID) {
         Optional<VPRequest> vpRequest=vpRequestRepo.findById(requestID);
         if(vpRequest.isPresent()){
-            VehicleInsurers vehicleInsurers= vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.get().getVehicleMake(),vpRequest.get().getVehicleModel());
-            return vehicleInsurers;
+            Optional<VehicleInsurers> vehicleInsurers= vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.get().getVehicleMake(),vpRequest.get().getVehicleModel());
+            if(vehicleInsurers.isPresent()){
+                vpRequest.get().setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
+                vpRequestRepo.save(vpRequest.get());
+                return vehicleInsurers.get();
+            }
         }
         return null;
     }

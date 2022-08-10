@@ -16,6 +16,5 @@ public class Checkout {
     private String phone;
     private String requestID;
     private String insurer;
-    private Integer premium;
 
 }
