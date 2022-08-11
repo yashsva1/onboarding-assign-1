@@ -6,6 +6,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,8 +18,12 @@ import java.util.List;
 public class VehicleInsurers {
     @Id
     private String ID;
+    @NotBlank(message = "vertical cannot be empty")
     private String vertical;
+    @NotBlank(message = "make cannot be empty")
     private String make;
+    @NotBlank(message = "model cannot be empty")
     private String model;
-    private List<Insurer> supportedInsurers;
+    @NotEmpty
+    private List< @Valid Insurer> supportedInsurers;
 }
