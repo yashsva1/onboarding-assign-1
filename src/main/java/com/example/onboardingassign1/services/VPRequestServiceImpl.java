@@ -48,7 +48,7 @@ public class VPRequestServiceImpl implements VPRequestService {
         if(!existingVPRequest.isPresent()) throw new ResourceNotFoundException("Update failed  - Invalid requestID | ");
 
         Optional<VehicleInsurers> vehicleInsurers = vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.getVehicleMake(), vpRequest.getVehicleModel());
-        if(!vehicleInsurers.isPresent()) throw new ResourceNotFoundException("Update failed  - No vehicle insurers available for the given vehicleMake and vehicleModel | ");
+        if(!vehicleInsurers.isPresent()) throw new ResourceNotFoundException("Update failed  - No vehicle insurers available for the given vertical, vehicleMake and vehicleModel | ");
 
         vpRequest.setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
 
