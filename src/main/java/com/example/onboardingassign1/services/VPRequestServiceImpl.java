@@ -6,8 +6,10 @@ import com.example.onboardingassign1.models.VehicleInsurers;
 import com.example.onboardingassign1.repositories.VPRequestRepository;
 import com.example.onboardingassign1.repositories.VehicleInsurersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Optional;
 
@@ -39,6 +41,9 @@ public class VPRequestServiceImpl implements VPRequestService {
 
     @Override
     public VPRequest updateVehicleProfileRequest(VPRequest vpRequest) {
+        Optional<String> requestIDOpt= Optional.ofNullable(vpRequest.getRequestID());
+        if(!requestIDOpt.isPresent()) throw new ResourceNotFoundException("requestID field Missing |");
+
         Optional<VPRequest> existingVPRequest=vpRequestRepo.findById(vpRequest.getRequestID());
         if(!existingVPRequest.isPresent()) throw new ResourceNotFoundException("Update failed  - Invalid requestID | ");
 
