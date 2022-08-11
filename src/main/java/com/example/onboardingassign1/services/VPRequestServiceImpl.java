@@ -1,5 +1,6 @@
 package com.example.onboardingassign1.services;
 
+import com.example.onboardingassign1.errorHandling.ResourceNotFoundException;
 import com.example.onboardingassign1.models.VPRequest;
 import com.example.onboardingassign1.models.VehicleInsurers;
 import com.example.onboardingassign1.repositories.VPRequestRepository;
@@ -21,39 +22,42 @@ public class VPRequestServiceImpl implements VPRequestService {
     @Override
     public String addVehicleProfileRequest(VPRequest vpRequest){
         Optional<VehicleInsurers> vehicleInsurers= vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.getVehicleMake(),vpRequest.getVehicleModel());
-        if (vehicleInsurers.isPresent())
-            vpRequest.setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
-        VPRequest request=vpRequestRepo.save(vpRequest);
+        if(!vehicleInsurers.isPresent()) throw new ResourceNotFoundException(" No vehicle insurers available for the given vehicleMake and vehicleModel | ");
+
+        vpRequest.setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
+        VPRequest request = vpRequestRepo.save(vpRequest);
+
         return request.getRequestID();
     }
 
     @Override
     public VPRequest getVehicleProfileRequest(String requestID) {
-        VPRequest request=vpRequestRepo.findById(requestID).get();
-        return request;
+        Optional<VPRequest> request=vpRequestRepo.findById(requestID);
+        if(!request.isPresent()) throw new ResourceNotFoundException(" Invalid requestID | ");
+        return request.get();
     }
 
     @Override
     public VPRequest updateVehicleProfileRequest(VPRequest vpRequest) {
         Optional<VPRequest> existingVPRequest=vpRequestRepo.findById(vpRequest.getRequestID());
-        if(existingVPRequest.isPresent()){
-            Optional<VehicleInsurers> vehicleInsurers= vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.getVehicleMake(),vpRequest.getVehicleModel());
-            if (vehicleInsurers.isPresent())
-                vpRequest.setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
+        if(!existingVPRequest.isPresent()) throw new ResourceNotFoundException("Update failed  - Invalid requestID | ");
 
-            return vpRequestRepo.save(vpRequest);
-        }
-        return null;
+        Optional<VehicleInsurers> vehicleInsurers = vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.getVehicleMake(), vpRequest.getVehicleModel());
+        if(!vehicleInsurers.isPresent()) throw new ResourceNotFoundException("Update failed  - No vehicle insurers available for the given vehicleMake and vehicleModel | ");
+
+        vpRequest.setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
+
+        return vpRequestRepo.save(vpRequest);
     }
 
     @Override
     public String deleteVehicleProfileRequest(String requestID) {
         Optional<VPRequest> vpRequest=vpRequestRepo.findById(requestID);
-        if(vpRequest.isPresent()){
-            vpRequestRepo.delete(vpRequest.get());
-            return "Deletion Successful";
-        }
+        if(!vpRequest.isPresent()) throw new ResourceNotFoundException(" Deletion failed - Invalid requestID | ");
 
-        return "Deletion Failed";
+        vpRequestRepo.delete(vpRequest.get());
+
+        return "Deletion Successful";
+
     }
 }
