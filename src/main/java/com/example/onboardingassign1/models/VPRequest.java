@@ -24,7 +24,6 @@ public class VPRequest {
     private String vehicleMake;
     @NotBlank(message = "VehicleModel cannot be empty")
     private String vehicleModel;
-    private List<Insurer> availableInsurers= new ArrayList<>();
 
 
 }

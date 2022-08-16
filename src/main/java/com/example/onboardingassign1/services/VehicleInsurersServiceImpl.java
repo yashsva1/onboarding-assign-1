@@ -27,8 +27,6 @@ public class VehicleInsurersServiceImpl implements VehicleInsurersService{
         Optional<VehicleInsurers> vehicleInsurers= vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.get().getVehicleMake(),vpRequest.get().getVehicleModel());
         if(!vehicleInsurers.isPresent()) throw new ResourceNotFoundException("  No vehicle insurers available for the given vertical, make and model | ");
 
-        vpRequest.get().setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
-        vpRequestRepo.save(vpRequest.get());
 
         return vehicleInsurers.get();
     }

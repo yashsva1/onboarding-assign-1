@@ -1,11 +1,9 @@
 package com.example.onboardingassign1.services;
 
 import com.example.onboardingassign1.errorHandling.ResourceNotFoundException;
-import com.example.onboardingassign1.models.Checkout;
-import com.example.onboardingassign1.models.Insurer;
-import com.example.onboardingassign1.models.VPRequest;
-import com.example.onboardingassign1.models.VehicleInsurers;
+import com.example.onboardingassign1.models.*;
 import com.example.onboardingassign1.repositories.CheckoutRepository;
+import com.example.onboardingassign1.repositories.ResponseRepository;
 import com.example.onboardingassign1.repositories.VPRequestRepository;
 import com.example.onboardingassign1.repositories.VehicleInsurersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +23,14 @@ public class CheckoutServiceImpl implements CheckoutService{
     @Autowired
     private VehicleInsurersRepository vehicleInsurersRepository;
 
+    @Autowired
+    private ResponseRepository responseRepo;
+
     @Override
     public Checkout addCheckout(Checkout checkout) {
-        Optional<VPRequest> vpRequest=vpRequestRepository.findById(checkout.getRequestID());
-        if (!vpRequest.isPresent()) throw new ResourceNotFoundException(" Invalid requestID | ");
+
+        Optional<Response> response=responseRepo.findOneByRequestIDAndResultID(checkout.getRequestID(),checkout.getResultID());
+        if (!response.isPresent()) throw new ResourceNotFoundException(" Invalid requestID or resultID | ");
 
         Checkout checkout1=checkoutRepo.save(checkout);
         return checkout1;
@@ -49,8 +51,8 @@ public class CheckoutServiceImpl implements CheckoutService{
         Optional<Checkout> existingCheckout=checkoutRepo.findById(checkout.getCheckoutID());
         if (!existingCheckout.isPresent()) throw new ResourceNotFoundException(" Invalid checkoutID | ");
 
-        Optional<VPRequest> vpRequest=vpRequestRepository.findById(checkout.getRequestID());
-        if (!vpRequest.isPresent()) throw new ResourceNotFoundException(" Invalid requestID | ");
+        Optional<Response> response=responseRepo.findOneByRequestIDAndResultID(checkout.getRequestID(),checkout.getResultID());
+        if (!response.isPresent()) throw new ResourceNotFoundException(" Invalid requestID or resultID | ");
 
         return checkoutRepo.save(checkout);
     }

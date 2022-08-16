@@ -1,8 +1,11 @@
 package com.example.onboardingassign1.services;
 
 import com.example.onboardingassign1.errorHandling.ResourceNotFoundException;
+import com.example.onboardingassign1.models.Insurer;
+import com.example.onboardingassign1.models.Response;
 import com.example.onboardingassign1.models.VPRequest;
 import com.example.onboardingassign1.models.VehicleInsurers;
+import com.example.onboardingassign1.repositories.ResponseRepository;
 import com.example.onboardingassign1.repositories.VPRequestRepository;
 import com.example.onboardingassign1.repositories.VehicleInsurersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -21,13 +25,22 @@ public class VPRequestServiceImpl implements VPRequestService {
     @Autowired
     private VehicleInsurersRepository vehicleInsurersRepo;
 
+    @Autowired
+    private ResponseService responseService;
+
     @Override
     public String addVehicleProfileRequest(VPRequest vpRequest){
         Optional<VehicleInsurers> vehicleInsurers= vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.getVehicleMake(),vpRequest.getVehicleModel());
         if(!vehicleInsurers.isPresent()) throw new ResourceNotFoundException(" No vehicle insurers available for the given vehicleMake and vehicleModel | ");
 
-        vpRequest.setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
         VPRequest request = vpRequestRepo.save(vpRequest);
+
+        ArrayList<Response> responses=new ArrayList<>();
+        for(Insurer insurer:vehicleInsurers.get().getSupportedInsurers()){
+            responses.add(new Response(null,request.getRequestID(),insurer.getName(),insurer.getPremium()));
+        }
+
+        responseService.createResponses(responses);
 
         return request.getRequestID();
     }
@@ -50,7 +63,14 @@ public class VPRequestServiceImpl implements VPRequestService {
         Optional<VehicleInsurers> vehicleInsurers = vehicleInsurersRepo.findOneByMakeAndModel(vpRequest.getVehicleMake(), vpRequest.getVehicleModel());
         if(!vehicleInsurers.isPresent()) throw new ResourceNotFoundException("Update failed  - No vehicle insurers available for the given vertical, vehicleMake and vehicleModel | ");
 
-        vpRequest.setAvailableInsurers(vehicleInsurers.get().getSupportedInsurers());
+        responseService.deleteAllByRequestID(vpRequest.getRequestID());
+
+        ArrayList<Response> responses=new ArrayList<>();
+        for(Insurer insurer:vehicleInsurers.get().getSupportedInsurers()){
+            responses.add(new Response(null,vpRequest.getRequestID(),insurer.getName(),insurer.getPremium()));
+        }
+
+        responseService.createResponses(responses);
 
         return vpRequestRepo.save(vpRequest);
     }

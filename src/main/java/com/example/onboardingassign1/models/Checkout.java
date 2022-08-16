@@ -25,7 +25,7 @@ public class Checkout {
     private String phone;
     @NotBlank(message = "requestID cannot be empty")
     private String requestID;
-    @NotBlank(message = "insurer cannot be empty")
-    private String insurer;
+    @NotBlank(message = "resultID cannot be empty")
+    private String resultID;
 
 }
